@@ -12,8 +12,8 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 HTTPClient http;
 WiFiClient wifi;
 
-const char* ssid = "ssid";
-const char* password = "password";
+const char* ssid = "RyanVinny";
+const char* password = "ryanvinny";
 
 void setup() {
   Serial.begin(115200);
@@ -58,6 +58,13 @@ void loop() {
   if (http.connected()) {
     if (wifi.available()) {
       String line = wifi.readStringUntil('\n');
+        if (line.startsWith("event: error")) {
+          lcd.clear();
+          lcd.print("An error has");
+          lcd.setCursor(0, 1);
+          lcd.print("occurred.");
+          flushWiFiBuffer();
+        }
         if (line.startsWith("data: ")) {
           String jsonString = line.substring(6).c_str();
 
