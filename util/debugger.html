@@ -41,7 +41,7 @@
                 es = new EventSource(`http://localhost:5000/listen?id=${roomid}&apiKey=${apikey}`);
                 es.onmessage = function(event) {
                     const newMessage = document.createElement('p');
-                    newMessage.textContent = event.data;
+                    newMessage.textContent = JSON.parse(event.data)["time"] + ": " + JSON.parse(event.data)["message"];
                     messages.appendChild(newMessage);
                 }
                 es.onerror = function(event) {
