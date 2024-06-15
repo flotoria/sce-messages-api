@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const client = require("prom-client");
+const moment = require('moment-timezone');
 
 const app = express();
 // middleware stuff
@@ -57,10 +58,13 @@ const apiKeys = {"key1": "Ryan", "key2": "Robert", "key3": "Liam"}; // dummy api
 // write function to write to the chatroom
 function write(id, message) {
     if (clients[id]) {
+        const time = moment().tz('America/Los_Angeles').format('MM/DD/YY HH:mm');
+        const dataJSONString = JSON.stringify({time, message});
+
         totalMessagesSent.inc();
         totalChatMessagesPerChatRoom.labels(id).inc();
         for (let res of clients[id]) {
-            res.write(`data: ${message}\n\n`);
+            res.write(`data: ${dataJSONString}\n\n`);
         }
     }
 }
